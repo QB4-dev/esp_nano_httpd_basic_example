@@ -22,3 +22,5 @@ Then use your smartphone or computer and scan WiFi networks. `ESP-LED-XXXX` with
 Connect to it, and type `http://192.168.4.1` address into web browser. 
 Set your router SSID and password and try to access your device from your router network. 
 Also check led demo - it's simple example web interface to configure LED blink frequency
+
+![ESP8266 connected to router](/img.png)
