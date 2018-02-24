@@ -21,11 +21,13 @@ void blink_fun(void *arg)
 }
 
 // HTTP request callbacks
-void ICACHE_FLASH_ATTR wifi_config_cb(struct espconn *conn, http_request_t *req, void *arg, uint32_t len)
+void ICACHE_FLASH_ATTR wifi_config_cb(struct espconn *conn, void *arg, uint32_t len)
 {
     struct station_config station_conf = {0};
+    http_request_t *req = conn->reverse;
     char *param;
 
+    if(req == NULL) return;
     //We only handle POST requests
     if(req->type != TYPE_POST || req->content == NULL){
         resp_http_error(conn);
@@ -46,16 +48,18 @@ void ICACHE_FLASH_ATTR wifi_config_cb(struct espconn *conn, http_request_t *req,
     wifi_station_set_config(&station_conf);   //save new WiFi settings
     wifi_station_connect();					  //connect to network
 
-    send_html(conn, req, wifi_connect_html, sizeof(wifi_connect_html)); //show HTML page
+    send_html(conn, wifi_connect_html, sizeof(wifi_connect_html)); //show HTML page
 }
 
-void ICACHE_FLASH_ATTR led_demo_cb(struct espconn *conn, http_request_t *req, void *arg, uint32_t len)
+void ICACHE_FLASH_ATTR led_demo_cb(struct espconn *conn, void *arg, uint32_t len)
 {
 	uint32_t freq;
     char *param;
+    http_request_t *req = conn->reverse;
 
+    if(req == NULL) return;
     if(req->type == TYPE_GET){   //handle GET request
-    	send_html(conn, req, demo_html, sizeof(demo_html)); //return HTML demo page
+    	send_html(conn, demo_html, sizeof(demo_html)); //return HTML demo page
     	return;
     }
 
@@ -74,7 +78,7 @@ void ICACHE_FLASH_ATTR led_demo_cb(struct espconn *conn, http_request_t *req, vo
 			os_printf("new LED frequency set. f=%dHz\n", freq);
 		}
 	}
-    send_html(conn, req, demo_html, sizeof(demo_html)); //return HTML demo page
+    send_html(conn, demo_html, sizeof(demo_html)); //return HTML demo page
 }
 
 // URL config table
