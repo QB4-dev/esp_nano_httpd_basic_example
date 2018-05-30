@@ -32,7 +32,7 @@ ESPBAUD     ?= 921600
 TARGET		= app
 
 # which modules (subdirectories) of the project to include in compiling
-MODULES		= driver user esp_nano_httpd
+MODULES		= user esp_nano_httpd esp_nano_httpd/util
 EXTRA_INCDIR    = include
 
 # libraries used in this project, mainly provided by the SDK
@@ -45,7 +45,7 @@ CFLAGS		= -Os -g -O2 -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functio
 LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static
 
 # linker script used for the above linkier step
-LD_SCRIPT	= eagle.app.v6.ld
+LD_SCRIPT	= eagle.app.v6.old.1024.app1.ld
 
 # various paths from the SDK used in this project
 SDK_LIBDIR	= lib
@@ -55,7 +55,7 @@ SDK_INCDIR	= include include/json driver_lib/include
 # we create two different files for uploading into the flash
 # these are the names and options to generate them
 FW_FILE_1_ADDR	= 0x00000
-FW_FILE_2_ADDR	= 0x10000
+FW_FILE_2_ADDR	= 0x11000
 
 # select which tools to use as compiler, librarian and linker
 CC		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
@@ -105,9 +105,9 @@ $1/%.o: %.c
 	$(Q) $(CC) $(INCDIR) $(MODULE_INCDIR) $(EXTRA_INCDIR) $(SDK_INCDIR) $(CFLAGS) -c $$< -o $$@
 endef
 
-.PHONY: all checkdirs flash clean
+.PHONY: all checkdirs flash clean html
 
-all: checkdirs $(TARGET_OUT) $(FW_FILE_1) $(FW_FILE_2)
+all: checkdirs html $(TARGET_OUT) $(FW_FILE_1) $(FW_FILE_2)
 
 $(FW_BASE)/%.bin: $(TARGET_OUT) | $(FW_BASE)
 	$(vecho) "FW $(FW_BASE)/"
@@ -115,7 +115,7 @@ $(FW_BASE)/%.bin: $(TARGET_OUT) | $(FW_BASE)
 
 $(TARGET_OUT): $(APP_AR)
 	$(vecho) "LD $@"
-	$(Q) $(LD) -L$(SDK_LIBDIR) $(LD_SCRIPT) $(LDFLAGS) -Wl,--start-group $(LIBS) $(APP_AR) -Wl,--end-group -o $@
+	$(Q) $(LD) -L$(SDK_LIBDIR) $(LD_SCRIPT) $(LDFLAGS) -Wl,--start-group $(LIBS) $(APP_AR) -Wl,--end-group -o $@  
 
 $(APP_AR): $(OBJ)
 	$(vecho) "AR $@"
@@ -128,11 +128,15 @@ $(BUILD_DIR):
 
 $(FW_BASE):
 	$(Q) mkdir -p $@
+	
+html:
+	@echo "generating html includes..."
+	$(Q) $(shell ./html/gen_includes.sh)
 
 flash: $(FW_FILE_1) $(FW_FILE_2)
 	$(ESPTOOL) --port $(ESPPORT) --baud $(ESPBAUD) write_flash $(FW_FILE_1_ADDR) $(FW_FILE_1) $(FW_FILE_2_ADDR) $(FW_FILE_2)
 
 clean:
-	$(Q) rm -rf $(FW_BASE) $(BUILD_BASE)
+	$(Q) rm -rf $(FW_BASE) $(BUILD_BASE) html/include
 
 $(foreach bdir,$(BUILD_DIR),$(eval $(call compile-objects,$(bdir))))
