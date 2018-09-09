@@ -20,14 +20,17 @@ void blink_fun(void *arg)
         gpio_output_set(BIT2, 0, BIT2, 0);
 }
 
-// HTTP request callbacks
+// HTTP request callbacks:
+
+/* Setup WiFi connection */
 void ICACHE_FLASH_ATTR wifi_config_cb(struct espconn *conn, void *arg, uint32_t len)
 {
     struct station_config station_conf = {0};
-    http_request_t *req = conn->reverse;
+    http_request_t *req = conn->reverse; //acquire request from connection
     char *param;
 
     if(req == NULL) return;
+
     //We only handle POST requests
     if(req->type != TYPE_POST || req->content == NULL){
         resp_http_error(conn);
@@ -51,11 +54,12 @@ void ICACHE_FLASH_ATTR wifi_config_cb(struct espconn *conn, void *arg, uint32_t 
     send_html(conn, wifi_connect_html, sizeof(wifi_connect_html)); //show HTML page
 }
 
+/* set LED frequency */
 void ICACHE_FLASH_ATTR led_demo_cb(struct espconn *conn, void *arg, uint32_t len)
 {
 	uint32_t freq;
     char *param;
-    http_request_t *req = conn->reverse;
+    http_request_t *req = conn->reverse; //acquire request from connection
 
     if(req == NULL) return;
     if(req->type == TYPE_GET){   //handle GET request
@@ -68,8 +72,10 @@ void ICACHE_FLASH_ATTR led_demo_cb(struct espconn *conn, void *arg, uint32_t len
         return;
     }
 
+    /* in request content We expect serialized input form query like: led_freq=10
+        Use strtok to divide query into tokens*/
     param=strtok(req->content,"&");
-	if( os_memcmp(param,"led_freq=",9) == 0 ){         //led frequency
+	if( os_memcmp(param,"led_freq=",9) == 0 ){         // got led frequency in query
 		freq = atoi(strchr(param,'=')+1);
 		if(freq != 0){
 			os_timer_disarm(&blink_timer);
