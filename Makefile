@@ -24,7 +24,7 @@ XTENSA_TOOLS_ROOT ?= /opt/esp-open-sdk/xtensa-lx106-elf/bin
 SDK_BASE	?= /opt/ESP8266_NONOS_SDK
 
 # esptool.py path and port
-ESPTOOL		?= /home/elsta/ESP/esp-open-sdk/esptool/esptool.py
+ESPTOOL		?= /opt/esp-open-sdk/esptool/esptool.py
 ESPPORT		?= /dev/ttyUSB0
 ESPBAUD     	?= 921600
 
