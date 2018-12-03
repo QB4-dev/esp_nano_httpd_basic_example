@@ -21,12 +21,12 @@ FW_BASE		= firmware
 XTENSA_TOOLS_ROOT ?= /opt/esp-open-sdk/xtensa-lx106-elf/bin
 
 # base directory of the ESP8266 SDK package, absolute
-SDK_BASE	?= /opt/esp-open-sdk/sdk
+SDK_BASE	?= /opt/ESP8266_NONOS_SDK
 
 # esptool.py path and port
-ESPTOOL		?= esptool.py
+ESPTOOL		?= /home/elsta/ESP/esp-open-sdk/esptool/esptool.py
 ESPPORT		?= /dev/ttyUSB0
-ESPBAUD     ?= 921600
+ESPBAUD     	?= 921600
 
 # name for the target project
 TARGET		= app
@@ -36,10 +36,11 @@ MODULES		= user esp_nano_httpd esp_nano_httpd/util
 EXTRA_INCDIR    = include
 
 # libraries used in this project, mainly provided by the SDK
-LIBS		= c gcc hal pp phy net80211 lwip wpa main json
+#LIBS		= c gcc hal pp phy net80211 lwip main wpa json
+LIBS		= c gcc hal pp phy net80211 lwip wpa pwm upgrade main ssl crypto json
 
 # compiler flags using during compilation of source files
-CFLAGS		= -Os -g -O2 -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH
+CFLAGS		= -Os -g -O2 -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functions -nostdlib -mlongcalls -mtext-section-literals  -D__ets__ -DICACHE_FLASH -DSPI_FLASH_SIZE_MAP=4
 
 # linker flags used to generate the main object file
 LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static
