@@ -106,17 +106,18 @@ void ICACHE_FLASH_ATTR user_init()
     os_timer_setfn(&blink_timer, (os_timer_func_t *)blink_fun, NULL);
     os_timer_arm(&blink_timer, 1000, 1);
     
+	wifi_station_set_auto_connect(0);
     esp_nano_httpd_register_content(url_cfg);
     esp_nano_httpd_init_AP(STATIONAP_MODE, "ESP-LED");
 }
 
 /* for new Espressif SDK compatibility */
 static const partition_item_t at_partition_table[] = {
-    { SYSTEM_PARTITION_BOOTLOADER, 	0x0, 						0x1000},
-    { SYSTEM_PARTITION_OTA_1,   	0x1000, 					SYSTEM_PARTITION_OTA_SIZE},
-    { SYSTEM_PARTITION_OTA_2,   	SYSTEM_PARTITION_OTA_2_ADDR, 			SYSTEM_PARTITION_OTA_SIZE},
-    { SYSTEM_PARTITION_RF_CAL,  	SYSTEM_PARTITION_RF_CAL_ADDR, 			0x1000},
-    { SYSTEM_PARTITION_PHY_DATA, 	SYSTEM_PARTITION_PHY_DATA_ADDR, 		0x1000},
+    { SYSTEM_PARTITION_BOOTLOADER, 	0x0, 							0x1000},
+    { SYSTEM_PARTITION_OTA_1,   	0x1000, 						SYSTEM_PARTITION_OTA_SIZE},
+    { SYSTEM_PARTITION_OTA_2,   	SYSTEM_PARTITION_OTA_2_ADDR, 	SYSTEM_PARTITION_OTA_SIZE},
+    { SYSTEM_PARTITION_RF_CAL,  	SYSTEM_PARTITION_RF_CAL_ADDR, 	0x1000},
+    { SYSTEM_PARTITION_PHY_DATA, 	SYSTEM_PARTITION_PHY_DATA_ADDR, 0x1000},
     { SYSTEM_PARTITION_SYSTEM_PARAMETER, SYSTEM_PARTITION_SYSTEM_PARAMETER_ADDR, 	0x3000},
 };
 

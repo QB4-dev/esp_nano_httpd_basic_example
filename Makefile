@@ -36,7 +36,6 @@ MODULES		= user esp_nano_httpd esp_nano_httpd/util
 EXTRA_INCDIR    = include
 
 # libraries used in this project, mainly provided by the SDK
-#LIBS		= c gcc hal pp phy net80211 lwip main wpa json
 LIBS		= c gcc hal pp phy net80211 lwip wpa pwm upgrade main ssl crypto json
 
 # compiler flags using during compilation of source files
