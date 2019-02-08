@@ -26,7 +26,7 @@ SDK_BASE	?= /opt/ESP8266_NONOS_SDK
 # esptool.py path and port
 ESPTOOL		?= /opt/esp-open-sdk/esptool/esptool.py
 ESPPORT		?= /dev/ttyUSB0
-ESPBAUD     	?= 921600
+ESPBAUD     ?= 921600
 
 # name for the target project
 TARGET		= app
