@@ -26,7 +26,7 @@ SDK_BASE	?= /opt/esp-open-sdk/sdk
 # esptool.py path and port
 ESPTOOL		?= esptool.py
 ESPPORT		?= /dev/ttyUSB0
-ESPBAUD     ?= 921600
+ESPBAUD     ?= 115200
 
 # name for the target project
 TARGET		= app
@@ -45,7 +45,7 @@ CFLAGS		= -Os -g -O2 -Wpointer-arith -Wundef -Werror -Wl,-EL -fno-inline-functio
 LDFLAGS		= -nostdlib -Wl,--no-check-sections -u call_user_start -Wl,-static
 
 # linker script used for the above linkier step
-LD_SCRIPT	= eagle.app.v6.old.1024.app1.ld
+LD_SCRIPT	= eagle.app.v6.ld
 
 # various paths from the SDK used in this project
 SDK_LIBDIR	= lib
@@ -55,7 +55,7 @@ SDK_INCDIR	= include include/json driver_lib/include
 # we create two different files for uploading into the flash
 # these are the names and options to generate them
 FW_FILE_1_ADDR	= 0x00000
-FW_FILE_2_ADDR	= 0x11000
+FW_FILE_2_ADDR	= 0x40000
 
 # select which tools to use as compiler, librarian and linker
 CC		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
