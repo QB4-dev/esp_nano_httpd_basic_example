@@ -10,7 +10,7 @@
 #include "../html/include/wifi_connect.h"
 #include "../html/include/demo.h"
 
-static volatile os_timer_t blink_timer;
+static os_timer_t blink_timer;
 
 void blink_fun(void *arg)
 {	//Do blinky stuff
